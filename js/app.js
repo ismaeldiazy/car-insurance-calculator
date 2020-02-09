@@ -8,6 +8,24 @@ function Insurance(brand, year, type) {
 // GUI constructor
 function Interface() {}
 
+// Error message that is shown on the DOM
+Interface.prototype.showError = function(message, type) {
+    const div = document.createElement('div');
+
+    if (type == 'error') {
+        div.classList.add('error', 'message');
+    } else {
+        div.classList.add('correcto', 'message');
+    }
+    div.innerHTML = `${message}`
+    form.insertBefore(div, document.querySelector('.form-group'));
+
+    setTimeout(function() {
+        // Remove alert after time out
+        document.querySelector('.message').remove()
+    }, 3000);
+}
+
 // EventListeners
 const form = document.getElementById('cotizar-seguro');
 form.addEventListener('submit', function(e) {
@@ -28,7 +46,8 @@ form.addEventListener('submit', function(e) {
 
     // Check that fields are not empty
     if (selectedBrand === '' || selectedYear === '' || type === '') {
-        console.log('Faltan datos');
+        interface.showError('One or more fields are empty. Please, check the form and try again.', 
+        'error');
     }else {
         console.log('Tot be my dude');
     }
