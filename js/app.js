@@ -38,8 +38,8 @@ Insurance.prototype.calculateInsurance = function() {
 // GUI constructor
 function Interface() {}
 
-// Error message that is shown on the DOM
-Interface.prototype.showError = function(message, type) {
+// Alert displayed on the DOM
+Interface.prototype.showMsg = function(message, type) {
     const div = document.createElement('div');
 
     if (type == 'error') {
@@ -76,13 +76,21 @@ Interface.prototype.showResults = function(insurance, price) {
     const div = document.createElement('div');
     // Insert data
     div.innerHTML = `
-        <p>Your data:</p>
+        <p class="header">Results:</p>
         <p>Brand: ${brand}</p>
         <p>Year: ${insurance.year}</p>
         <p>Type: ${insurance.type}</p>
         <p>Total price: ${price} $</p>
     `;
-    result.appendChild(div);
+    // Display spinner gif
+    const spinner = document.querySelector('#cargando img')
+    spinner.style.display = 'block';
+    // Spinner gets hidden after 3s and results are displayed
+    setTimeout(function() {
+        spinner.style.display = 'none';
+        result.appendChild(div);
+    }, 3000)
+
 }
 
 // EventListeners
@@ -105,15 +113,22 @@ form.addEventListener('submit', function(e) {
 
     // Check that fields are not empty
     if (selectedBrand === '' || selectedYear === '' || type === '') {
-        interface.showError('One or more fields are empty. Please, check the form and try again.', 
+        interface.showMsg('One or more fields are empty. Please, check the form and try again.', 
         'error');
     }else {
+        // Clear previous results if any
+        const results = document.querySelector('#resultado div');
+        if (results != null) {
+            results.remove();
+        }
         // Instantiate insurance object
         const insurance = new Insurance(selectedBrand, selectedYear, type);
         // Calculate insurance
         const price = insurance.calculateInsurance();
         // Show the results
         interface.showResults(insurance, price);
+        interface.showMsg('Calculating', 
+        'success');
     }
 } )
 
