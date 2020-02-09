@@ -4,6 +4,36 @@ function Insurance(brand, year, type) {
     this.year = year;
     this.type = type;
 }
+Insurance.prototype.calculateInsurance = function() {
+
+    let price;
+    const basePrice = 2000;
+    // Different prices according the selected brand
+    switch(this.brand) {
+        case '1':
+            price = basePrice * 1.15;
+            break;
+        case '2':
+            price = basePrice * 1.05;
+            break;
+        case '3':
+            price = basePrice * 1.35;
+            break;
+    }
+    
+    // Current year minus selected year
+    const difference = new Date().getFullYear() - this.year;
+    // Every year of seniority reduce the insurance price in a 3%
+    price -= ((difference * 3) * price) / 100;
+    // The price changes depending on the insurance type (basic or premium)
+    // Basic is 30% more, and premium is 50%
+    if (this.type === 'basico') {
+        price *= 1.30;
+    } else {
+        price *= 1.50;
+    }
+    return price;
+}
 
 // GUI constructor
 function Interface() {}
@@ -49,7 +79,10 @@ form.addEventListener('submit', function(e) {
         interface.showError('One or more fields are empty. Please, check the form and try again.', 
         'error');
     }else {
-        console.log('Tot be my dude');
+        // Instantiate insurance object
+        const insurance = new Insurance(selectedBrand, selectedYear, type);
+        // Calculate insurance
+        const price = insurance.calculateInsurance();
     }
 } )
 
