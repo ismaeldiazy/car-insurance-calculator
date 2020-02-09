@@ -27,7 +27,7 @@ Insurance.prototype.calculateInsurance = function() {
     price -= ((difference * 3) * price) / 100;
     // The price changes depending on the insurance type (basic or premium)
     // Basic is 30% more, and premium is 50%
-    if (this.type === 'basico') {
+    if (this.type === 'basic') {
         price *= 1.30;
     } else {
         price *= 1.50;
@@ -54,6 +54,35 @@ Interface.prototype.showError = function(message, type) {
         // Remove alert after time out
         document.querySelector('.message').remove()
     }, 3000);
+}
+
+// Print the result of calculating the insurance price
+Interface.prototype.showResults = function(insurance, price) {
+    // Div where the results of the calculation will be displayed
+    const result = document.getElementById('resultado');
+    let brand;
+    switch(insurance.brand) {
+        case '1':
+            brand = 'American';
+            break;
+        case '2':
+            brand = 'Asian';
+            break;
+        case '3':
+            brand = 'European';
+            break;
+    }
+    // Create div
+    const div = document.createElement('div');
+    // Insert data
+    div.innerHTML = `
+        <p>Your data:</p>
+        <p>Brand: ${brand}</p>
+        <p>Year: ${insurance.year}</p>
+        <p>Type: ${insurance.type}</p>
+        <p>Total price: ${price} $</p>
+    `;
+    result.appendChild(div);
 }
 
 // EventListeners
@@ -83,6 +112,8 @@ form.addEventListener('submit', function(e) {
         const insurance = new Insurance(selectedBrand, selectedYear, type);
         // Calculate insurance
         const price = insurance.calculateInsurance();
+        // Show the results
+        interface.showResults(insurance, price);
     }
 } )
 
